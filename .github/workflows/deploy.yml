@@ -1,21 +1,16 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,21 +21,12 @@ jobs:
       - run: npm ci
       # Pushes convex/ to the production Convex deployment, then runs the given
       # command with VITE_CONVEX_URL pointing at that deployment automatically.
-      # GitHub Pages project sites serve from /<repo>/ — VITE_BASE sets Vite's base to match.
-      - run: npx convex deploy --cmd "VITE_BASE=/${GITHUB_REPOSITORY#*/}/ npm run build"
+      # Cloudflare Pages serves from "/" so no VITE_BASE override is needed here.
+      - run: npx convex deploy --cmd "npm run build"
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: cloudflare/wrangler-action@v3
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=forcecamp --branch=main
