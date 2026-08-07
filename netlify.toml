@@ -1,0 +1,12 @@
+# Requires a CONVEX_DEPLOY_KEY environment variable set in the Netlify dashboard
+# (Convex dashboard -> Settings -> Deploy Keys). `convex deploy --cmd` pushes convex/
+# to production and injects VITE_CONVEX_URL into the build command automatically.
+[build]
+  command = "npx convex deploy --cmd 'npm run build'"
+  publish = "dist"
+
+# Single-page app: every route falls back to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

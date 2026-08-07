@@ -1,0 +1,25 @@
+{
+  "name": "forcecamp",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Gamified study app for the Salesforce Certified Platform Administrator exam",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@auth/core": "^0.41.3",
+    "@convex-dev/auth": "^0.0.94",
+    "convex": "^1.43.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
