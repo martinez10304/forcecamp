@@ -288,7 +288,7 @@ export default function ForceCamp() {
         <div className="foot">
           Built on the Salesforce Certified Platform Administrator blueprint effective December&nbsp;15,&nbsp;2025 &mdash; 60 questions, 105 minutes, 65% to pass.
           Domain weights shown on the board are the official ones. {ALLQ.length} questions in the bank.
-          <div className="credit">Developed by: Christopher Martinez, CEO ZenithArm Solutions</div>
+          <div className="credit">Developed by: Christopher Martinez</div>
         </div>
       </div>
     </div>
