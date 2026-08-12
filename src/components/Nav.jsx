@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { multOf, clockStr } from "../lib/scoring.js";
 
 export default function Nav({
@@ -8,23 +8,36 @@ export default function Nav({
   p, rank, railPct,
   auth,
 }) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const h = e => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, [open]);
+
+  const navigate = fn => { fn(); setOpen(false); };
+
   return (
     <header className="top">
       <div className="topin">
         <div className="brand">Force<span>camp</span></div>
-        <nav className="nav">
-          <button className={"nb" + (view === "home" ? " on" : "")} onClick={() => go("home")}>Home</button>
-          <button className={"nb" + (view === "board" || view === "q" ? " on" : "")} onClick={() => go("board")}>Board</button>
-          <button className={"nb" + (view === "rapid" ? " on" : "")} onClick={startRun}>Rapid Fire</button>
-          <button className={"nb" + (view === "flash" ? " on" : "")} onClick={() => go("flash")}>Flashcards</button>
-          <button className={"nb" + (view === "survival" ? " on" : "")} onClick={() => go("survival")}>Survival</button>
-          <button className={"nb" + (view === "boss" ? " on" : "")} onClick={() => go("boss")}>Boss Rush</button>
-          <button className={"nb" + (view === "daily" ? " on" : "")} onClick={() => go("daily")}>Daily</button>
-          <button className={"nb" + (view === "plinko" ? " on" : "")} onClick={() => go("plinko")}>Plinko</button>
-          <button className={"nb" + (view === "mock" ? " on" : "")} onClick={startMock}>Mock Exam</button>
-          <button className={"nb" + (view === "stats" ? " on" : "")} onClick={() => go("stats")}>Progress</button>
-          <button className={"nb" + (view === "ranks" ? " on" : "")} onClick={() => go("ranks")}>Ranks</button>
+
+        <nav className={"nav" + (open ? " open" : "")} id="mobile-nav">
+          <button className={"nb" + (view === "home" ? " on" : "")} onClick={() => navigate(() => go("home"))}>Home</button>
+          <button className={"nb" + (view === "board" || view === "q" ? " on" : "")} onClick={() => navigate(() => go("board"))}>Board</button>
+          <button className={"nb" + (view === "rapid" ? " on" : "")} onClick={() => navigate(startRun)}>Rapid Fire</button>
+          <button className={"nb" + (view === "flash" ? " on" : "")} onClick={() => navigate(() => go("flash"))}>Flashcards</button>
+          <button className={"nb" + (view === "survival" ? " on" : "")} onClick={() => navigate(() => go("survival"))}>Survival</button>
+          <button className={"nb" + (view === "boss" ? " on" : "")} onClick={() => navigate(() => go("boss"))}>Boss Rush</button>
+          <button className={"nb" + (view === "daily" ? " on" : "")} onClick={() => navigate(() => go("daily"))}>Daily</button>
+          <button className={"nb" + (view === "plinko" ? " on" : "")} onClick={() => navigate(() => go("plinko"))}>Plinko</button>
+          <button className={"nb" + (view === "mock" ? " on" : "")} onClick={() => navigate(startMock)}>Mock Exam</button>
+          <button className={"nb" + (view === "stats" ? " on" : "")} onClick={() => navigate(() => go("stats"))}>Progress</button>
+          <button className={"nb" + (view === "ranks" ? " on" : "")} onClick={() => navigate(() => go("ranks"))}>Ranks</button>
         </nav>
+
         <div className="spacer" />
         {inMock ? (
           <>
@@ -51,6 +64,15 @@ export default function Nav({
         {auth && auth.status === "guest" && (
           <button className="nb" onClick={auth.onGoAuth}>Sign in to save to the cloud</button>
         )}
+        <button
+          className="hamburger"
+          onClick={() => setOpen(o => !o)}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? "Close menu" : "Open menu"}
+        >
+          <span className="bars" />
+        </button>
       </div>
       <div className="rail"><div className="railfill" style={{ width: Math.max(2, railPct) + "%" }} /></div>
     </header>
